@@ -1,8 +1,10 @@
 package requests
 
 import (
+	"io"
 	"io/ioutil"
 	"net/http"
+	"os"
 )
 
 const (
@@ -34,4 +36,23 @@ func GetBody(url string) ([]byte, error) {
 	defer res.Body.Close()
 
 	return ioutil.ReadAll(res.Body)
+}
+
+func Download(url string, filename string) error {
+	resp, err := Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	f, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	_, err = io.Copy(f, resp.Body)
+	if err != nil {
+		return err
+	}
 }
