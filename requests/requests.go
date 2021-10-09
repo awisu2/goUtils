@@ -1,6 +1,8 @@
 package requests
 
 import (
+	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -44,6 +46,11 @@ func Download(url string, filename string) error {
 		return err
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		message := fmt.Sprintf("no ok access. code: %d, status: %s", resp.StatusCode, resp.Status)
+		return errors.New(message)
+	}
 
 	f, err := os.Create(filename)
 	if err != nil {
