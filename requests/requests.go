@@ -55,4 +55,5 @@ func Download(url string, filename string) error {
 	if err != nil {
 		return err
 	}
+	return nil
 }
