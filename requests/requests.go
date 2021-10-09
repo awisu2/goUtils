@@ -1,6 +1,9 @@
 package requests
 
-import "net/http"
+import (
+	"io/ioutil"
+	"net/http"
+)
 
 const (
 	ACCEPT_ALL   = "*"
@@ -21,4 +24,14 @@ func Get(url string) (*http.Response, error) {
 	req.Header.Set("User-Agent", USERAGENT_CHROME)
 
 	return http.DefaultClient.Do(req)
+}
+
+func GetBody(url string) ([]byte, error) {
+	res, err := Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	return ioutil.ReadAll(res.Body)
 }
