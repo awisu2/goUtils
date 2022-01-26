@@ -1,6 +1,8 @@
 package create
 
 import (
+	"image/color"
+
 	"github.com/awisu2/goUtils/images"
 	"github.com/spf13/cobra"
 )
@@ -9,6 +11,12 @@ var params = struct {
 	width  int
 	height int
 	out    string
+	color  struct {
+		red   uint8
+		green uint8
+		blue  uint8
+		alpha uint8
+	}
 }{}
 
 // コマンド作成
@@ -27,7 +35,12 @@ var Cmd = &cobra.Command{
 				Format:  images.Jpg,
 				Quality: 70,
 			},
-			Color: images.RgbaBlack,
+			Color: color.RGBA{
+				R: params.color.red,
+				G: params.color.green,
+				B: params.color.blue,
+				A: params.color.alpha,
+			},
 		})
 
 	},
@@ -46,9 +59,18 @@ func init() {
 	// flags, pFlags := Cmd.Flags(), Cmd.PersistentFlags()
 	flags := Cmd.Flags()
 
+	// output path
 	flags.StringVarP(&params.out, "output", "o", "", "image output")
+
+	// size
 	flags.IntVarP(&params.width, "width", "w", 0, "image width")
 	flags.IntVarP(&params.height, "height", "y", 0, "image height")
+
+	// color
+	flags.Uint8VarP(&params.color.red, "red", "r", 0, "color red")
+	flags.Uint8VarP(&params.color.green, "green", "g", 0, "color green")
+	flags.Uint8VarP(&params.color.blue, "blue", "b", 0, "color blue")
+	flags.Uint8VarP(&params.color.alpha, "alpha", "a", 255, "color alpha")
 
 	// 必須指定
 	requireds := []string{"output", "width", "height"}
