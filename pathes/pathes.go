@@ -3,6 +3,7 @@ package pathes
 import (
 	"os"
 	"path"
+	"strings"
 )
 
 type GetPathResponse struct {
@@ -63,4 +64,13 @@ func AppConfigPath(appName string, configName string) (string, error) {
 
 	appConfigPath := path.Join(appConfigDir, configName)
 	return appConfigPath, err
+}
+
+// osに対して安全なファイル名に変換して返却
+func SafeFilename(filename string) string {
+	f := filename
+	f = strings.ReplaceAll(f, ":", ".")
+	f = strings.ReplaceAll(f, "/", "-")
+	f = strings.ReplaceAll(f, "|", "-")
+	return f
 }

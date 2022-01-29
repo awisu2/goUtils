@@ -1,6 +1,8 @@
 package pathes
 
 import (
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -44,5 +46,20 @@ func TestAppConfigPath(t *testing.T) {
 	}
 	if !strings.Contains(appConfigPath, configName) {
 		t.Error(err)
+	}
+}
+
+func TestSafePath(t *testing.T) {
+	filename := "a/b:cde"
+
+	dir := filepath.Join("tmp", filename)
+	if err := os.MkdirAll(dir, 0777); err == nil {
+		t.Fatalf("%v is safe string.", filename)
+	}
+
+	safeFilename := SafeFilename(filename)
+	safeDir := filepath.Join("tmp", safeFilename)
+	if err := os.MkdirAll(safeDir, 0777); err != nil {
+		t.Fatalf("%v", err)
 	}
 }
