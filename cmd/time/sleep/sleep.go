@@ -1,18 +1,24 @@
-package cmd
+package sleep
 
 import (
-	"github.com/awisu2/goUtils/cmd/images"
-	"github.com/awisu2/goUtils/cmd/time"
+	"time"
+
+	"github.com/awisu2/goUtils/cmd/images/create"
 	"github.com/spf13/cobra"
 )
 
 var params = struct {
+	time int64
 }{}
 
-// コマンド作成(一番topのコマンドは(通常)rootCmdと呼ぶ)
+// コマンド作成
 var Cmd = &cobra.Command{
-	Short: "go 言語でのutil環境",
+	Use:   "sleep",
+	Short: "一定時間待機",
 	Args:  cobra.ArbitraryArgs, // 引数設定(ArbitraryArgs: なんでもOK)
+	Run: func(cmd *cobra.Command, args []string) {
+		time.Sleep(time.Millisecond * time.Duration(params.time))
+	},
 }
 
 func initConfig() {
@@ -26,13 +32,11 @@ func init() {
 
 	// 引数設定
 	// flags, pFlags := Cmd.Flags(), Cmd.PersistentFlags()
+	flags, _ := Cmd.Flags(), Cmd.PersistentFlags()
+
+	// output path
+	flags.Int64VarP(&params.time, "time", "t", 0, "sleep time(millisecond)")
 
 	// 配下コマンドの追加
-	Cmd.AddCommand(images.Cmd)
-	Cmd.AddCommand(time.Cmd)
-}
-
-// 参考実装では、cmd.Execute()で実行できるようにしている
-func Execute() error {
-	return Cmd.Execute()
+	Cmd.AddCommand(create.Cmd)
 }
