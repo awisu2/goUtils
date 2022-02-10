@@ -27,3 +27,14 @@ httpリクエスト
 - GetBody(url string) ([]byte, error)
 - Download(url string, filename string) error
   - ファイルのダウンロード
+
+## goUtils/pathes
+
+any path utils
+
+- UserPathes: userDirectory. os specifiction path
+- AppConfigDir:
+- AppConfigPath:
+- MakeSafePath: make safe path. if already exists chaneg path
+- ReBaseName: name path's base without extension
+- SplitName: splite base to name and extension

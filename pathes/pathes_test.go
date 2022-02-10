@@ -65,8 +65,8 @@ func TestMakeSafePath(t *testing.T) {
 	}
 
 	safeFilename := MakeSafePath(file, MakeSafePathOption{
-		IsDirectory:  false,
-		FixDuplicate: true,
+		IsDirectory:    false,
+		NoFixDuplicate: false,
 	})
 	if safeFilename != file {
 		t.Error(fmt.Errorf("%v, want %v", safeFilename, file))
@@ -75,8 +75,8 @@ func TestMakeSafePath(t *testing.T) {
 	files.Save([]byte(""), file)
 
 	safeFilename = MakeSafePath(file, MakeSafePathOption{
-		IsDirectory:  false,
-		FixDuplicate: true,
+		IsDirectory:    false,
+		NoFixDuplicate: false,
 	})
 	if safeFilename != filepath.Join(dir, "abc_1.jpg") {
 		t.Error(fmt.Errorf("%v, want %v", "abc_1.jpg", file))

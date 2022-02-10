@@ -96,7 +96,7 @@ var DefaultSafeFileNameOption = SafeFilenameOption{
 // 1. if already exists file or directory change pathname
 func MakeSafePath(path string, opt MakeSafePathOption) string {
 	// check file dupulicatte
-	if opt.FixDuplicate {
+	if !opt.NoFixDuplicate {
 		_path := path
 
 		name, ext := path, ""
@@ -116,8 +116,8 @@ func MakeSafePath(path string, opt MakeSafePathOption) string {
 }
 
 type MakeSafePathOption struct {
-	IsDirectory  bool
-	FixDuplicate bool
+	IsDirectory    bool
+	NoFixDuplicate bool
 }
 
 // rename base without extension
