@@ -1,10 +1,13 @@
 package pathes
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/awisu2/goUtils/files"
 )
 
 func TestUserPathes(t *testing.T) {
@@ -49,17 +52,48 @@ func TestAppConfigPath(t *testing.T) {
 	}
 }
 
-func TestSafePath(t *testing.T) {
-	filename := "a/b:cde"
+func TestMakeSafePath(t *testing.T) {
+	dir := "tmp"
+	file := filepath.Join(dir, "abc.jpg")
 
-	dir := filepath.Join("tmp", filename)
-	if err := os.MkdirAll(dir, 0777); err == nil {
-		t.Fatalf("%v is safe string.", filename)
+	if err := os.RemoveAll(dir); err != nil {
+		t.Fatalf("%v", err)
 	}
 
-	safeFilename := SafeFilename(filename)
-	safeDir := filepath.Join("tmp", safeFilename)
-	if err := os.MkdirAll(safeDir, 0777); err != nil {
+	if err := os.MkdirAll(dir, 0777); err != nil {
 		t.Fatalf("%v", err)
+	}
+
+	safeFilename := MakeSafePath(file, MakeSafePathOption{
+		IsDirectory:  false,
+		FixDuplicate: true,
+	})
+	if safeFilename != file {
+		t.Error(fmt.Errorf("%v, want %v", safeFilename, file))
+	}
+
+	files.Save([]byte(""), file)
+
+	safeFilename = MakeSafePath(file, MakeSafePathOption{
+		IsDirectory:  false,
+		FixDuplicate: true,
+	})
+	if safeFilename != filepath.Join(dir, "abc_1.jpg") {
+		t.Error(fmt.Errorf("%v, want %v", "abc_1.jpg", file))
+	}
+
+	if err := os.RemoveAll(dir); err != nil {
+		t.Fatalf("%v", err)
+	}
+}
+
+func TestSplitName(t *testing.T) {
+	path := "/a/b/c/abc.jpg"
+	name, ext := SplitName(filepath.Base(path))
+	if name != "abc" {
+		t.Error(fmt.Errorf("name: %v, want abc", name))
+	}
+	if ext != ".jpg" {
+		t.Error(fmt.Errorf("ext: %v, want .jpg", ext))
 	}
 }

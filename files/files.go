@@ -7,15 +7,20 @@ import (
 	"regexp"
 )
 
-// ファイルの存在確認
-func IsExists(filePath string) error {
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		return err
+// check file exists
+//
+// if ignore error hapen it's return false
+// because if all error return this function is too deficult to use
+//
+func IsExists(filePath string) bool {
+	if _, err := os.Stat(filePath); err != nil {
+		// if os.IsNotExist(err) {}
+		return false
 	}
-	return nil
+	return true
 }
 
-// 保存
+// save file
 func Save(data []byte, savePath string) error {
 	f, err := os.Create(savePath)
 	if err != nil {
@@ -27,10 +32,10 @@ func Save(data []byte, savePath string) error {
 	return nil
 }
 
-// 読み込み
+// read file
 func Read(readPath string) ([]byte, error) {
-	if err := IsExists(readPath); err != nil {
-		return nil, err
+	if !IsExists(readPath) {
+		return nil, os.ErrNotExist
 	}
 
 	data, err := ioutil.ReadFile(readPath)
