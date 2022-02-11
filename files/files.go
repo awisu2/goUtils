@@ -4,6 +4,7 @@ import (
 	"io/fs"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"regexp"
 )
 
@@ -87,4 +88,13 @@ func FirstFile(dirname string, re *regexp.Regexp) (match fs.FileInfo, err error)
 	}
 
 	return nil, nil
+}
+
+// MkdirAll by Path
+//
+// get directory from path before run MkdirAll
+//
+func MkdirAllByPath(path string, perm os.FileMode) error {
+	dir, _ := filepath.Split(path)
+	return os.MkdirAll(dir, perm)
 }
