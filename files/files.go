@@ -33,6 +33,17 @@ func Save(data []byte, savePath string) error {
 	return nil
 }
 
+// save file with mkdirAll
+func SaveWithMkdirAll(data []byte, savePath string, perm os.FileMode) error {
+	if err := MkdirAllByPath(savePath, perm); err != nil {
+		return err
+	}
+	if err := Save(data, savePath); err != nil {
+		return err
+	}
+	return nil
+}
+
 // read file
 func Read(readPath string) ([]byte, error) {
 	if !IsExists(readPath) {
