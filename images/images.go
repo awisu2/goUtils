@@ -3,11 +3,10 @@ package images
 import (
 	"image"
 	"image/color"
+	"image/gif"
 	"image/jpeg"
 	"image/png"
 	"os"
-
-	"golang.org/x/image/draw"
 )
 
 // 保存オプション
@@ -24,7 +23,7 @@ type CreateOption struct {
 }
 
 func CreateImage(size *Size) *image.RGBA {
-	img := image.NewRGBA(image.Rect(0, 0, size.Width, size.Height))
+	img := image.NewRGBA(image.Rect(0, 0, size.X, size.Y))
 	return img
 }
 
@@ -41,7 +40,10 @@ func Create(option *CreateOption) error {
 	return nil
 }
 
-// ファイルに保存
+// save to file
+//
+// if not set format in option, auto ditect from path's ext.
+//
 func Save(img image.Image, option *SaveOption) (err error) {
 	f, err := os.Create(option.Path)
 	if err != nil {
@@ -49,10 +51,20 @@ func Save(img image.Image, option *SaveOption) (err error) {
 	}
 	defer f.Close()
 
-	if option.Format == Jpg {
+	// auto ditect from path's ext. if not set
+	format := option.Format
+	if format == "" {
+		format = GetFormatFromPath(option.Path)
+	}
+
+	// Info: go can't create webp(official)
+	switch format {
+	case Jpg:
 		err = jpeg.Encode(f, img, &jpeg.Options{Quality: option.Quality})
-	} else if option.Format == Png {
+	case Png, Webp:
 		err = png.Encode(f, img)
+	case Gif:
+		err = gif.Encode(f, img, &gif.Options{})
 	}
 	if err != nil {
 		return err
@@ -61,7 +73,7 @@ func Save(img image.Image, option *SaveOption) (err error) {
 	return nil
 }
 
-// 特定のファイルを読み込み
+// read and create image object
 func Open(path string) (image.Image, error) {
 	f, err := os.Open(path)
 	if err != nil {
@@ -77,23 +89,7 @@ func Open(path string) (image.Image, error) {
 	return image, nil
 }
 
-// 画像のリサイズ
-func Resize(img image.Image, size *Size) (*image.RGBA, error) {
-	// 変換後画像オブジェクト作成
-	resizedImg := CreateImage(size)
-	bounds := resizedImg.Bounds()
-
-	// もと画像を拡大/縮小して書き込み
-	// todo: Kernelを切り替えられるようにしても良い
-	// 色が先に塗られていた場合dstが優先される
-	// 第5引数の draw.Op: alphaが効く形式のときに有効
-	//   draw.Over: 上書き(色は交じる)
-	//   draw.Src: dstが優先され色の合成はされない
-	draw.CatmullRom.Scale(resizedImg, bounds, img, img.Bounds(), draw.Src, nil)
-	return resizedImg, nil
-}
-
-// 一定範囲に色をセット
+// drow color to specific area
 func SetRgbas(img *image.RGBA, dr image.Rectangle, color color.Color) {
 	for y := dr.Min.Y; y < dr.Max.Y; y++ {
 		for x := dr.Min.X; x < dr.Max.X; x++ {
@@ -102,7 +98,7 @@ func SetRgbas(img *image.RGBA, dr image.Rectangle, color color.Color) {
 	}
 }
 
-// 全範囲に色をセット
+// set collor all area
 func SetRgbasFull(img *image.RGBA, color color.Color) {
 	SetRgbas(img, img.Bounds(), color)
 }

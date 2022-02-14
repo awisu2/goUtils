@@ -27,8 +27,8 @@ var Cmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		images.Create(&images.CreateOption{
 			Size: images.Size{
-				Width:  params.width,
-				Height: params.height,
+				X: params.width,
+				Y: params.height,
 			},
 			SaveOption: images.SaveOption{
 				Path:    params.out,

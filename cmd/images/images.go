@@ -2,6 +2,7 @@ package images
 
 import (
 	"github.com/awisu2/goUtils/cmd/images/create"
+	"github.com/awisu2/goUtils/cmd/images/resize"
 	"github.com/spf13/cobra"
 )
 
@@ -32,4 +33,5 @@ func init() {
 
 	// 配下コマンドの追加
 	Cmd.AddCommand(create.Cmd)
+	Cmd.AddCommand(resize.Cmd)
 }
