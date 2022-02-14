@@ -1,9 +1,8 @@
 package sleep
 
 import (
-	"time"
-
 	"github.com/awisu2/goUtils/cmd/images/create"
+	"github.com/awisu2/goUtils/times"
 	"github.com/spf13/cobra"
 )
 
@@ -17,7 +16,7 @@ var Cmd = &cobra.Command{
 	Short: "一定時間待機",
 	Args:  cobra.ArbitraryArgs, // 引数設定(ArbitraryArgs: なんでもOK)
 	Run: func(cmd *cobra.Command, args []string) {
-		time.Sleep(time.Millisecond * time.Duration(params.time))
+		times.SleepMilliSecond(int(params.time))
 	},
 }
 
