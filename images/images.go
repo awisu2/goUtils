@@ -57,14 +57,15 @@ func Save(img image.Image, option *SaveOption) (err error) {
 		format = GetFormatFromPath(option.Path)
 	}
 
-	// Info: go can't create webp(official)
 	switch format {
 	case Jpg:
 		err = jpeg.Encode(f, img, &jpeg.Options{Quality: option.Quality})
-	case Png, Webp:
-		err = png.Encode(f, img)
 	case Gif:
 		err = gif.Encode(f, img, &gif.Options{})
+	// case Webp: // Info: go can't create webp(official)
+	// case Png:
+	default:
+		err = png.Encode(f, img)
 	}
 	if err != nil {
 		return err
