@@ -21,8 +21,6 @@ func (s *Size) AspectRatio(denominatorY bool) float32 {
 		}
 		return float32(s.Y) / float32(s.X)
 	}
-
-	return 1
 }
 
 // todo: constで保管しておく方法
