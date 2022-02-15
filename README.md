@@ -1,7 +1,31 @@
 # goUtils
 
-go関係で、簡易的な補助関数をまとめて利用できるように
+my golang utils. it can use command or package
 
+```bash
+go install github.com/awisu2/goUtil
+```
+
+## command help
+
+```text
+go 言語でのutil環境
+
+Usage:
+   [command]
+
+Available Commands:
+  completion  generate the autocompletion script for the specified shell
+  help        Help about any command
+  images      各種画像関係処理
+  output      output the set value to stdout and stderr
+  time        時間処理
+
+Flags:
+  -h, --help   help for this command
+
+Use " [command] --help" for more information about a command.
+```
 
 ## apis
 

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/awisu2/goUtils/cmd/images"
+	"github.com/awisu2/goUtils/cmd/output"
 	"github.com/awisu2/goUtils/cmd/time"
 	"github.com/spf13/cobra"
 )
@@ -30,6 +31,7 @@ func init() {
 	// 配下コマンドの追加
 	Cmd.AddCommand(images.Cmd)
 	Cmd.AddCommand(time.Cmd)
+	Cmd.AddCommand(output.Cmd)
 }
 
 // 参考実装では、cmd.Execute()で実行できるようにしている
