@@ -7,6 +7,8 @@ import (
 	"image/jpeg"
 	"image/png"
 	"os"
+
+	"golang.org/x/image/webp"
 )
 
 // 保存オプション
@@ -84,7 +86,10 @@ func Open(path string) (image.Image, error) {
 
 	image, _, err := image.Decode(f)
 	if err != nil {
-		return nil, err
+		image, err = webp.Decode(f)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return image, nil
