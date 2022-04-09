@@ -80,6 +80,8 @@ func SafeFilename(filename string, opt SafeFilenameOption) string {
 		f = strings.ReplaceAll(f, string(c), opt.Alias)
 	}
 
+	f = strings.TrimSpace(f)
+
 	return f
 }
 
